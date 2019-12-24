@@ -1,0 +1,22 @@
+
+State Machine - |main|r_data_cntrl
+Name r_data_cntrl.SEND r_data_cntrl.REC r_data_cntrl.IDLE 
+r_data_cntrl.IDLE 0 0 0 
+r_data_cntrl.REC 0 1 1 
+r_data_cntrl.SEND 1 0 1 
+
+State Machine - |main|uart_rx:uart_rx_map|r_uart_rx
+Name r_uart_rx.DONE r_uart_rx.FINISH r_uart_rx.REC r_uart_rx.START r_uart_rx.IDLE 
+r_uart_rx.IDLE 0 0 0 0 0 
+r_uart_rx.START 0 0 0 1 1 
+r_uart_rx.REC 0 0 1 0 1 
+r_uart_rx.FINISH 0 1 0 0 1 
+r_uart_rx.DONE 1 0 0 0 1 
+
+State Machine - |main|uart_tx:uart_tx_map|r_uart_tx
+Name r_uart_tx.DONE r_uart_tx.FINISH r_uart_tx.SEND r_uart_tx.START r_uart_tx.IDLE 
+r_uart_tx.IDLE 0 0 0 0 0 
+r_uart_tx.START 0 0 0 1 1 
+r_uart_tx.SEND 0 0 1 0 1 
+r_uart_tx.FINISH 0 1 0 0 1 
+r_uart_tx.DONE 1 0 0 0 1 

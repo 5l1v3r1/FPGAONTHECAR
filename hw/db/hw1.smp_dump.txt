@@ -1,0 +1,17 @@
+
+State Machine - |top|UART:uart_i|UART_RX:uart_rx_i|rx_pstate
+Name rx_pstate.stopbit rx_pstate.paritybit rx_pstate.databits rx_pstate.startbit rx_pstate.idle 
+rx_pstate.idle 0 0 0 0 0 
+rx_pstate.startbit 0 0 0 1 1 
+rx_pstate.databits 0 0 1 0 1 
+rx_pstate.paritybit 0 1 0 0 1 
+rx_pstate.stopbit 1 0 0 0 1 
+
+State Machine - |top|UART:uart_i|UART_TX:uart_tx_i|tx_pstate
+Name tx_pstate.stopbit tx_pstate.paritybit tx_pstate.databits tx_pstate.startbit tx_pstate.txsync tx_pstate.idle 
+tx_pstate.idle 0 0 0 0 0 0 
+tx_pstate.txsync 0 0 0 0 1 1 
+tx_pstate.startbit 0 0 0 1 0 1 
+tx_pstate.databits 0 0 1 0 0 1 
+tx_pstate.paritybit 0 1 0 0 0 1 
+tx_pstate.stopbit 1 0 0 0 0 1 

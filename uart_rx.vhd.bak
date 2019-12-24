@@ -1,0 +1,20 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_SIGNED.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+
+
+entity uart_rx is 
+	Generic(
+		CLK_FREQ : integer := 12000000;
+		BAUDRATE: integer := 9600;
+	);
+	PORT(
+		in_clk: in std_logic;
+		in_rst: in std_logic;
+		in_rx : in std_logic;
+		out_rx_data : out std_logic_vector(7 downto 0);
+		out_rx_tamam : out std_logic
+	);
+	end uart_rx;
+	

@@ -1,0 +1,16 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity main is 
+	PORT(
+		in_clk: in std_logic;
+		in_rst: in std_logic;
+		in_rx : in std_logic;
+		out_tx : out std_logic
+	);
+	end main;
+	
+architecture Behavioral of main is
+
+
+end Behavioral;
