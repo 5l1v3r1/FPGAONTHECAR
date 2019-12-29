@@ -6,30 +6,21 @@ use IEEE.STD_LOGIC_ARITH.ALL;
 
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
-entity firs is port ( 
-clk : in std_logic;
+entity dc_motor is 
+port ( 
+    clk : in std_logic;   
+    kontak : in std_logic;   
+    ileri : in std_logic;    
+    geri : in std_logic;   
+    sag : in std_logic;   
+    sol : in std_logic;   
+    enable : out std_logic;   
+    output1 : out std_logic;   
+    output2 : out std_logic;   
+    enable2 : out std_logic);
+end dc_motor;
 
-kontak : in std_logic;
-
-ileri : in std_logic;
-
-geri : in std_logic;
-
-sag : in std_logic;
-
-sol : in std_logic;
-
-enable : out std_logic;
-
-output1 : out std_logic;
-
-output2 : out std_logic;
-
-enable2 : out std_logic);
-
-end firs;
-
-architecture Behavioral of firs is 
+architecture Behavioral of dc_motor is 
 begin 
 process(kontak)
 --variable i : integer := 1;
