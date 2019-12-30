@@ -7,6 +7,8 @@ entity main is
 		in_rst: in std_logic;
 		in_rx : in std_logic;
 		out_tx : out std_logic;
+		sda: inout std_logic;
+		scl: inout std_logic;
 		led1 : out std_logic
 	);
 	end main;
@@ -107,6 +109,9 @@ architecture Behavioral of main is
 	type vehicle is (START,IDLE,GOING,ONLOC);
 	
 	
+	-- General States
+	signal main_cntrl : vehicle := IDLE;
+	
 	-- Signal that should be connected to components
 	-- UART
 	signal r_data_cntrl : t_data_cntrl := IDLE;
@@ -118,11 +123,11 @@ architecture Behavioral of main is
 	signal r_tx_data : std_logic_vector(7 downto 0);
 	
 	--FIFO
-	constant c_DEPTH : integer := 8;
-    constant c_WIDTH : integer := 11;
+	constant c_DEPTH : integer := 32;
+    constant c_WIDTH : integer := 8;
        
     signal r_WR_EN   : std_logic := '0';
-    signal r_WR_DATA : std_logic_vector(c_WIDTH-1 downto 0) := r_rx_data;
+    signal r_WR_DATA : std_logic_vector(c_WIDTH-1 downto 0);
     signal w_FULL    : std_logic;
     signal r_RD_EN   : std_logic := '0';
     signal w_RD_DATA : std_logic_vector(c_WIDTH-1 downto 0);
@@ -135,12 +140,24 @@ architecture Behavioral of main is
     signal ena   : std_logic := '0';
     signal reset_n  : std_logic := '0';
     signal rw : std_logic := '0';
-    signal addr : std_logic_vector(7 downto 0) := "111011X"; -- x should be changed from the datasheet value
+    signal addr : std_logic_vector(6 downto 0) := "1110111"; -- x should be changed from the datasheet value
     signal data_wr: std_logic_vector(7 DOWNTO 0) ;
     signal busy  : std_logic := '0';                    
     signal data_rd : STD_LOGIC_VECTOR(7 DOWNTO 0); 
     signal ack_error : STD_LOGIC;                   
  
+    
+    
+    -- DC MOTOR
+    signal kontak : std_logic := '0';           
+    signal ileri  : std_logic := '0';                
+    signal geri  : std_logic := '0';                      
+    signal sag : std_logic := '0';        
+    signal sol : std_logic := '0';         
+    signal enable : std_logic := '0';       
+    signal output1 : std_logic := '0';           
+    signal output2 : std_logic := '0';                 
+    signal enable2 : std_logic := '0';       
     
 	
 	-- Signals that should be connected to main design
@@ -169,7 +186,7 @@ architecture Behavioral of main is
         );
         
         
-        uart_rx_map :  uart_rx
+     uart_rx_map :  uart_rx
         Generic map (
             CLK_FREQ => 12000000,
             BAUDRATE=> 9600
@@ -181,7 +198,7 @@ architecture Behavioral of main is
             out_rx_data => r_rx_data,
             out_rx_done => r_rx_done
         );
-        FIFO_MAP : fifo
+     FIFO_MAP : fifo
             generic map (
               g_WIDTH => c_WIDTH,
               g_DEPTH => c_DEPTH
@@ -197,7 +214,7 @@ architecture Behavioral of main is
               o_empty    => w_EMPTY
               );
               
-         I2C_MAP: i2c_master
+       I2C_MAP: i2c_master
                      generic map (
                        input_clk => input_clk,
                        bus_clk => bus_clk
@@ -205,29 +222,29 @@ architecture Behavioral of main is
                      port map (
                        clk => in_clk ,
                        reset_n => in_rst,
-                       ena  => ena ,
+                       ena  => ena,
                        addr  => addr,
                        rw => rw,
                        data_wr => data_wr,
                        busy  => busy,
                        data_rd    => data_rd,
                        ack_error  => ack_error,
-                       sda    => w_EMPTY,
-                       scl    => w_EMPTY
+                       sda => sda,
+                       scl => scl
                        );
                        
          DC_MAP: dc_motor  
              port map ( 
                        clk => in_clk ,
-                       kontak => in_clk ,           
-                       ileri => in_clk ,          
-                       geri => in_clk ,           
-                       sag => in_clk ,           
-                       sol => in_clk ,     
-                       enable => in_clk ,       
-                       output1 => in_clk ,           
-                       output2 => in_clk ,            
-                       enable2 => in_clk );
+                       kontak => kontak ,           
+                       ileri => ileri ,          
+                       geri => geri ,           
+                       sag => sag ,           
+                       sol => sol ,     
+                       enable => enable ,       
+                       output1 => output1 ,           
+                       output2 => output2 ,            
+                       enable2 => enable2 );
  
 	
 	process(in_clk, in_rst)
@@ -244,8 +261,11 @@ architecture Behavioral of main is
 				when REC =>
 					if r_rx_done = '1' then
 						r_tx_data <= r_rx_data;
+
+						r_WR_DATA <= r_rx_data;
 						r_tx_start <= '1';
 					else
+					   r_RD_EN <= '0';
 					   r_WR_EN <= '1';
 					   r_data_cntrl <= SEND;
 					end if;
@@ -258,6 +278,46 @@ architecture Behavioral of main is
 			end case;
 		end if;
 	end process;
+	
+	
+	process(in_clk, in_rst)
+	   
+        	   
+        begin
+           if in_rst = '1' then
+                    main_cntrl <= IDLE;
+                   
+           elsif rising_edge(in_clk) then
+               case main_cntrl is 
+               
+               when IDLE => 
+                -- 0. GO
+                -- 1. BASE
+                -- 2-4. COORD X
+                -- 5-7. COORD Y 
+                    r_RD_EN <= '1';
+                    if w_RD_DATA /= "00000000" then
+                        main_cntrl <= START;
+                    end if;
+                when START =>
+                    r_RD_EN <= '0';
+                    
+                    
+                when GOING => 
+                    r_RD_EN <= '0';
+                    
+                    
+                    
+                when ONLOC =>
+                    r_RD_EN <= '0';
+                    
+               
+                when others => NULL;
+               end case;
+           end if;
+           
+           
+    end process;
 	
 	
 	
