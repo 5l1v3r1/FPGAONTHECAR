@@ -1,5 +1,5 @@
 Analysis & Synthesis report for UART_Cyc1000
-Tue Dec 24 00:39:02 2019
+Mon Jan 13 01:56:59 2020
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -10,21 +10,7 @@ Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
   2. Analysis & Synthesis Summary
   3. Analysis & Synthesis Settings
   4. Parallel Compilation
-  5. Analysis & Synthesis Source Files Read
-  6. Analysis & Synthesis Resource Usage Summary
-  7. Analysis & Synthesis Resource Utilization by Entity
-  8. State Machine - |main|r_data_cntrl
-  9. State Machine - |main|uart_rx:uart_rx_map|r_uart_rx
- 10. State Machine - |main|uart_tx:uart_tx_map|r_uart_tx
- 11. Registers Removed During Synthesis
- 12. Removed Registers Triggering Further Register Optimizations
- 13. General Register Statistics
- 14. Multiplexer Restructuring Statistics (Restructuring Performed)
- 15. Parameter Settings for User Entity Instance: uart_tx:uart_tx_map
- 16. Parameter Settings for User Entity Instance: uart_rx:uart_rx_map
- 17. Post-Synthesis Netlist Statistics for Top Partition
- 18. Elapsed Time Per Partition
- 19. Analysis & Synthesis Messages
+  5. Analysis & Synthesis Messages
 
 
 
@@ -50,20 +36,20 @@ refer to the applicable agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                     ;
 +------------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Tue Dec 24 00:39:02 2019       ;
+; Analysis & Synthesis Status        ; Failed - Mon Jan 13 01:56:59 2020           ;
 ; Quartus Prime Version              ; 18.1.0 Build 625 09/12/2018 SJ Lite Edition ;
 ; Revision Name                      ; UART_Cyc1000                                ;
 ; Top-level Entity Name              ; main                                        ;
 ; Family                             ; Cyclone 10 LP                               ;
-; Total logic elements               ; 0                                           ;
-;     Total combinational functions  ; 0                                           ;
-;     Dedicated logic registers      ; 0                                           ;
-; Total registers                    ; 0                                           ;
-; Total pins                         ; 5                                           ;
-; Total virtual pins                 ; 0                                           ;
-; Total memory bits                  ; 0                                           ;
-; Embedded Multiplier 9-bit elements ; 0                                           ;
-; Total PLLs                         ; 0                                           ;
+; Total logic elements               ; N/A until Partition Merge                   ;
+;     Total combinational functions  ; N/A until Partition Merge                   ;
+;     Dedicated logic registers      ; N/A until Partition Merge                   ;
+; Total registers                    ; N/A until Partition Merge                   ;
+; Total pins                         ; N/A until Partition Merge                   ;
+; Total virtual pins                 ; N/A until Partition Merge                   ;
+; Total memory bits                  ; N/A until Partition Merge                   ;
+; Embedded Multiplier 9-bit elements ; N/A until Partition Merge                   ;
+; Total PLLs                         ; N/A until Partition Merge                   ;
 +------------------------------------+---------------------------------------------+
 
 
@@ -162,239 +148,11 @@ refer to the applicable agreement for further details.
 ; Maximum allowed            ; 2           ;
 ;                            ;             ;
 ; Average used               ; 1.00        ;
-; Maximum used               ; 2           ;
+; Maximum used               ; 1           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ;   0.0%      ;
 +----------------------------+-------------+
-
-
-+----------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Source Files Read                                                                                           ;
-+----------------------------------+-----------------+-----------------+-------------------------------------------------+---------+
-; File Name with User-Entered Path ; Used in Netlist ; File Type       ; File Name with Absolute Path                    ; Library ;
-+----------------------------------+-----------------+-----------------+-------------------------------------------------+---------+
-; uart_tx.vhd                      ; yes             ; User VHDL File  ; C:/Users/ADMIN/Desktop/fpga_project/uart_tx.vhd ;         ;
-; uart_rx.vhd                      ; yes             ; User VHDL File  ; C:/Users/ADMIN/Desktop/fpga_project/uart_rx.vhd ;         ;
-; main.vhd                         ; yes             ; User VHDL File  ; C:/Users/ADMIN/Desktop/fpga_project/main.vhd    ;         ;
-+----------------------------------+-----------------+-----------------+-------------------------------------------------+---------+
-
-
-+-------------------------------------------------------------+
-; Analysis & Synthesis Resource Usage Summary                 ;
-+---------------------------------------------+---------------+
-; Resource                                    ; Usage         ;
-+---------------------------------------------+---------------+
-;                                             ;               ;
-; Total combinational functions               ; 0             ;
-; Logic element usage by number of LUT inputs ;               ;
-;     -- 4 input functions                    ; 0             ;
-;     -- 3 input functions                    ; 0             ;
-;     -- <=2 input functions                  ; 0             ;
-;                                             ;               ;
-; Logic elements by mode                      ;               ;
-;     -- normal mode                          ; 0             ;
-;     -- arithmetic mode                      ; 0             ;
-;                                             ;               ;
-; Total registers                             ; 0             ;
-;     -- Dedicated logic registers            ; 0             ;
-;     -- I/O registers                        ; 0             ;
-;                                             ;               ;
-; I/O pins                                    ; 5             ;
-;                                             ;               ;
-; Embedded Multiplier 9-bit elements          ; 0             ;
-;                                             ;               ;
-; Maximum fan-out node                        ; out_tx~output ;
-; Maximum fan-out                             ; 1             ;
-; Total fan-out                               ; 6             ;
-; Average fan-out                             ; 0.60          ;
-+---------------------------------------------+---------------+
-
-
-+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Resource Utilization by Entity                                                                                                                                                      ;
-+----------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+---------------------+-------------+--------------+
-; Compilation Hierarchy Node ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name ; Entity Name ; Library Name ;
-+----------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+---------------------+-------------+--------------+
-; |main                      ; 0 (0)               ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 5    ; 0            ; |main               ; main        ; work         ;
-+----------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+---------------------+-------------+--------------+
-Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
-
-
-Encoding Type:  One-Hot
-+------------------------------------------------------------------------------+
-; State Machine - |main|r_data_cntrl                                           ;
-+-------------------+-------------------+------------------+-------------------+
-; Name              ; r_data_cntrl.SEND ; r_data_cntrl.REC ; r_data_cntrl.IDLE ;
-+-------------------+-------------------+------------------+-------------------+
-; r_data_cntrl.IDLE ; 0                 ; 0                ; 0                 ;
-; r_data_cntrl.REC  ; 0                 ; 1                ; 1                 ;
-; r_data_cntrl.SEND ; 1                 ; 0                ; 1                 ;
-+-------------------+-------------------+------------------+-------------------+
-
-
-Encoding Type:  One-Hot
-+---------------------------------------------------------------------------------------------------------+
-; State Machine - |main|uart_rx:uart_rx_map|r_uart_rx                                                     ;
-+------------------+----------------+------------------+---------------+-----------------+----------------+
-; Name             ; r_uart_rx.DONE ; r_uart_rx.FINISH ; r_uart_rx.REC ; r_uart_rx.START ; r_uart_rx.IDLE ;
-+------------------+----------------+------------------+---------------+-----------------+----------------+
-; r_uart_rx.IDLE   ; 0              ; 0                ; 0             ; 0               ; 0              ;
-; r_uart_rx.START  ; 0              ; 0                ; 0             ; 1               ; 1              ;
-; r_uart_rx.REC    ; 0              ; 0                ; 1             ; 0               ; 1              ;
-; r_uart_rx.FINISH ; 0              ; 1                ; 0             ; 0               ; 1              ;
-; r_uart_rx.DONE   ; 1              ; 0                ; 0             ; 0               ; 1              ;
-+------------------+----------------+------------------+---------------+-----------------+----------------+
-
-
-Encoding Type:  One-Hot
-+----------------------------------------------------------------------------------------------------------+
-; State Machine - |main|uart_tx:uart_tx_map|r_uart_tx                                                      ;
-+------------------+----------------+------------------+----------------+-----------------+----------------+
-; Name             ; r_uart_tx.DONE ; r_uart_tx.FINISH ; r_uart_tx.SEND ; r_uart_tx.START ; r_uart_tx.IDLE ;
-+------------------+----------------+------------------+----------------+-----------------+----------------+
-; r_uart_tx.IDLE   ; 0              ; 0                ; 0              ; 0               ; 0              ;
-; r_uart_tx.START  ; 0              ; 0                ; 0              ; 1               ; 1              ;
-; r_uart_tx.SEND   ; 0              ; 0                ; 1              ; 0               ; 1              ;
-; r_uart_tx.FINISH ; 0              ; 1                ; 0              ; 0               ; 1              ;
-; r_uart_tx.DONE   ; 1              ; 0                ; 0              ; 0               ; 1              ;
-+------------------+----------------+------------------+----------------+-----------------+----------------+
-
-
-+---------------------------------------------------------------------------------+
-; Registers Removed During Synthesis                                              ;
-+----------------------------------------+----------------------------------------+
-; Register name                          ; Reason for Removal                     ;
-+----------------------------------------+----------------------------------------+
-; r_data_cntrl.IDLE                      ; Lost fanout                            ;
-; uart_tx:uart_tx_map|r_uart_tx.SEND     ; Stuck at GND due to stuck port data_in ;
-; r_data_cntrl.SEND                      ; Stuck at GND due to stuck port data_in ;
-; uart_tx:uart_tx_map|r_tx               ; Stuck at VCC due to stuck port data_in ;
-; uart_tx:uart_tx_map|r_data_ind[0..2]   ; Stuck at GND due to stuck port data_in ;
-; uart_tx:uart_tx_map|r_uart_tx.FINISH   ; Stuck at GND due to stuck port data_in ;
-; uart_tx:uart_tx_map|r_uart_tx.DONE     ; Stuck at GND due to stuck port data_in ;
-; uart_tx:uart_tx_map|r_tx_done          ; Stuck at GND due to stuck port data_in ;
-; uart_tx:uart_tx_map|r_uart_tx.START    ; Lost fanout                            ;
-; uart_tx:uart_tx_map|r_clk_cnt[0..10]   ; Lost fanout                            ;
-; r_tx_start                             ; Lost fanout                            ;
-; uart_tx:uart_tx_map|r_uart_tx.IDLE     ; Lost fanout                            ;
-; uart_rx:uart_rx_map|r_rx_done          ; Lost fanout                            ;
-; r_data_cntrl.REC                       ; Lost fanout                            ;
-; uart_rx:uart_rx_map|r_uart_rx.DONE     ; Lost fanout                            ;
-; uart_rx:uart_rx_map|r_clk_cnt[0..10]   ; Lost fanout                            ;
-; uart_rx:uart_rx_map|r_uart_rx.FINISH   ; Lost fanout                            ;
-; uart_rx:uart_rx_map|r_data_ind[0..2]   ; Lost fanout                            ;
-; uart_rx:uart_rx_map|r_uart_rx.REC      ; Lost fanout                            ;
-; uart_rx:uart_rx_map|r_uart_rx.START    ; Lost fanout                            ;
-; uart_rx:uart_rx_map|r_rx_cnt[1,2]      ; Lost fanout                            ;
-; uart_rx:uart_rx_map|r_uart_rx.IDLE     ; Lost fanout                            ;
-; uart_rx:uart_rx_map|r_rx_cnt[0]        ; Lost fanout                            ;
-; Total Number of Removed Registers = 48 ;                                        ;
-+----------------------------------------+----------------------------------------+
-
-
-+-------------------------------------------------------------------------------------------------------------------------------------------------+
-; Removed Registers Triggering Further Register Optimizations                                                                                     ;
-+--------------------------------------+---------------------------+------------------------------------------------------------------------------+
-; Register name                        ; Reason for Removal        ; Registers Removed due to This Register                                       ;
-+--------------------------------------+---------------------------+------------------------------------------------------------------------------+
-; uart_tx:uart_tx_map|r_uart_tx.FINISH ; Stuck at GND              ; uart_tx:uart_tx_map|r_clk_cnt[8], uart_tx:uart_tx_map|r_clk_cnt[7],          ;
-;                                      ; due to stuck port data_in ; uart_tx:uart_tx_map|r_clk_cnt[6], uart_tx:uart_tx_map|r_clk_cnt[5],          ;
-;                                      ;                           ; uart_tx:uart_tx_map|r_clk_cnt[4], uart_tx:uart_tx_map|r_clk_cnt[3],          ;
-;                                      ;                           ; uart_tx:uart_tx_map|r_clk_cnt[2], uart_tx:uart_tx_map|r_clk_cnt[1],          ;
-;                                      ;                           ; uart_tx:uart_tx_map|r_clk_cnt[0], r_tx_start, uart_rx:uart_rx_map|r_rx_done, ;
-;                                      ;                           ; r_data_cntrl.REC, uart_rx:uart_rx_map|r_uart_rx.DONE,                        ;
-;                                      ;                           ; uart_rx:uart_rx_map|r_clk_cnt[10], uart_rx:uart_rx_map|r_clk_cnt[9],         ;
-;                                      ;                           ; uart_rx:uart_rx_map|r_clk_cnt[8], uart_rx:uart_rx_map|r_clk_cnt[7],          ;
-;                                      ;                           ; uart_rx:uart_rx_map|r_clk_cnt[6], uart_rx:uart_rx_map|r_clk_cnt[5],          ;
-;                                      ;                           ; uart_rx:uart_rx_map|r_clk_cnt[4], uart_rx:uart_rx_map|r_clk_cnt[3],          ;
-;                                      ;                           ; uart_rx:uart_rx_map|r_clk_cnt[2], uart_rx:uart_rx_map|r_clk_cnt[1],          ;
-;                                      ;                           ; uart_rx:uart_rx_map|r_clk_cnt[0], uart_rx:uart_rx_map|r_uart_rx.FINISH,      ;
-;                                      ;                           ; uart_rx:uart_rx_map|r_uart_rx.REC, uart_rx:uart_rx_map|r_uart_rx.START,      ;
-;                                      ;                           ; uart_rx:uart_rx_map|r_uart_rx.IDLE                                           ;
-; uart_tx:uart_tx_map|r_uart_tx.SEND   ; Stuck at GND              ; uart_tx:uart_tx_map|r_tx, uart_tx:uart_tx_map|r_uart_tx.START,               ;
-;                                      ; due to stuck port data_in ; uart_tx:uart_tx_map|r_clk_cnt[10], uart_tx:uart_tx_map|r_clk_cnt[9],         ;
-;                                      ;                           ; uart_tx:uart_tx_map|r_uart_tx.IDLE                                           ;
-; uart_rx:uart_rx_map|r_data_ind[2]    ; Lost Fanouts              ; uart_rx:uart_rx_map|r_data_ind[1], uart_rx:uart_rx_map|r_data_ind[0]         ;
-; uart_rx:uart_rx_map|r_rx_cnt[2]      ; Lost Fanouts              ; uart_rx:uart_rx_map|r_rx_cnt[1], uart_rx:uart_rx_map|r_rx_cnt[0]             ;
-; uart_tx:uart_tx_map|r_uart_tx.DONE   ; Stuck at GND              ; uart_tx:uart_tx_map|r_tx_done                                                ;
-;                                      ; due to stuck port data_in ;                                                                              ;
-+--------------------------------------+---------------------------+------------------------------------------------------------------------------+
-
-
-+------------------------------------------------------+
-; General Register Statistics                          ;
-+----------------------------------------------+-------+
-; Statistic                                    ; Value ;
-+----------------------------------------------+-------+
-; Total registers                              ; 0     ;
-; Number of registers using Synchronous Clear  ; 0     ;
-; Number of registers using Synchronous Load   ; 0     ;
-; Number of registers using Asynchronous Clear ; 0     ;
-; Number of registers using Asynchronous Load  ; 0     ;
-; Number of registers using Clock Enable       ; 0     ;
-; Number of registers using Preset             ; 0     ;
-+----------------------------------------------+-------+
-
-
-+------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                       ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------------------+
-; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output             ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------------------+
-; 5:1                ; 11 bits   ; 33 LEs        ; 11 LEs               ; 22 LEs                 ; Yes        ; |main|uart_rx:uart_rx_map|r_clk_cnt[9] ;
-; 5:1                ; 11 bits   ; 33 LEs        ; 11 LEs               ; 22 LEs                 ; Yes        ; |main|uart_tx:uart_tx_map|r_clk_cnt[6] ;
-; 3:1                ; 3 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; No         ; |main|uart_tx:uart_tx_map|r_data_ind   ;
-; 8:1                ; 5 bits    ; 25 LEs        ; 15 LEs               ; 10 LEs                 ; No         ; |main|uart_tx:uart_tx_map|Selector16   ;
-; 9:1                ; 5 bits    ; 30 LEs        ; 20 LEs               ; 10 LEs                 ; No         ; |main|uart_rx:uart_rx_map|Selector0    ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------------------+
-
-
-+------------------------------------------------------------------+
-; Parameter Settings for User Entity Instance: uart_tx:uart_tx_map ;
-+----------------+----------+--------------------------------------+
-; Parameter Name ; Value    ; Type                                 ;
-+----------------+----------+--------------------------------------+
-; clk_freq       ; 12000000 ; Signed Integer                       ;
-; baudrate       ; 9600     ; Signed Integer                       ;
-+----------------+----------+--------------------------------------+
-Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
-
-
-+------------------------------------------------------------------+
-; Parameter Settings for User Entity Instance: uart_rx:uart_rx_map ;
-+----------------+----------+--------------------------------------+
-; Parameter Name ; Value    ; Type                                 ;
-+----------------+----------+--------------------------------------+
-; clk_freq       ; 12000000 ; Signed Integer                       ;
-; baudrate       ; 9600     ; Signed Integer                       ;
-+----------------+----------+--------------------------------------+
-Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
-
-
-+-----------------------------------------------------+
-; Post-Synthesis Netlist Statistics for Top Partition ;
-+-----------------------+-----------------------------+
-; Type                  ; Count                       ;
-+-----------------------+-----------------------------+
-; boundary_port         ; 5                           ;
-; cycloneiii_lcell_comb ; 1                           ;
-;     normal            ; 1                           ;
-;         0 data inputs ; 1                           ;
-;                       ;                             ;
-; Max LUT depth         ; 0.00                        ;
-; Average LUT depth     ; 0.00                        ;
-+-----------------------+-----------------------------+
-
-
-+-------------------------------+
-; Elapsed Time Per Partition    ;
-+----------------+--------------+
-; Partition Name ; Elapsed Time ;
-+----------------+--------------+
-; Top            ; 00:00:00     ;
-+----------------+--------------+
 
 
 +-------------------------------+
@@ -403,41 +161,55 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
-    Info: Processing started: Tue Dec 24 00:38:46 2019
+    Info: Processing started: Mon Jan 13 01:56:46 2020
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off UART_Cyc1000 -c UART_Cyc1000
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 2 of the 2 processors detected
+Info (12021): Found 2 design units, including 1 entities, in source file bme280.vhd
+    Info (12022): Found design unit 1: i2c_leds-Behavioral File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/bme280.vhd Line: 20
+    Info (12023): Found entity 1: i2c_leds File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/bme280.vhd Line: 4
+Info (12021): Found 2 design units, including 1 entities, in source file i2c_master.vhd
+    Info (12022): Found design unit 1: i2c_master-logic File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/i2c_master.vhd Line: 44
+    Info (12023): Found entity 1: i2c_master File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/i2c_master.vhd Line: 26
+Info (12021): Found 2 design units, including 1 entities, in source file fifo.vhd
+    Info (12022): Found design unit 1: fifo-rtl File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/fifo.vhd Line: 56
+    Info (12023): Found entity 1: fifo File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/fifo.vhd Line: 35
+Info (12021): Found 2 design units, including 1 entities, in source file dc motor.vhd
+    Info (12022): Found design unit 1: dc_motor-Behavioral File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/dc motor.vhd Line: 23
+    Info (12023): Found entity 1: dc_motor File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/dc motor.vhd Line: 9
 Info (12021): Found 2 design units, including 1 entities, in source file uart_tx.vhd
-    Info (12022): Found design unit 1: uart_tx-Behavioral File: C:/Users/ADMIN/Desktop/fpga_project/uart_tx.vhd Line: 22
-    Info (12023): Found entity 1: uart_tx File: C:/Users/ADMIN/Desktop/fpga_project/uart_tx.vhd Line: 7
+    Info (12022): Found design unit 1: uart_tx-Behavioral File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/uart_tx.vhd Line: 22
+    Info (12023): Found entity 1: uart_tx File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/uart_tx.vhd Line: 7
 Info (12021): Found 2 design units, including 1 entities, in source file uart_rx.vhd
-    Info (12022): Found design unit 1: uart_rx-Behavioral File: C:/Users/ADMIN/Desktop/fpga_project/uart_rx.vhd Line: 21
-    Info (12023): Found entity 1: uart_rx File: C:/Users/ADMIN/Desktop/fpga_project/uart_rx.vhd Line: 7
+    Info (12022): Found design unit 1: uart_rx-Behavioral File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/uart_rx.vhd Line: 21
+    Info (12023): Found entity 1: uart_rx File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/uart_rx.vhd Line: 7
 Info (12021): Found 2 design units, including 1 entities, in source file main.vhd
-    Info (12022): Found design unit 1: main-Behavioral File: C:/Users/ADMIN/Desktop/fpga_project/main.vhd Line: 14
-    Info (12023): Found entity 1: main File: C:/Users/ADMIN/Desktop/fpga_project/main.vhd Line: 4
+    Info (12022): Found design unit 1: main-Behavioral File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 20
+    Info (12023): Found entity 1: main File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 5
 Info (12127): Elaborating entity "main" for the top level hierarchy
-Warning (10036): Verilog HDL or VHDL warning at main.vhd(51): object "r_data" assigned a value but never read File: C:/Users/ADMIN/Desktop/fpga_project/main.vhd Line: 51
-Warning (10036): Verilog HDL or VHDL warning at main.vhd(53): object "r_tx_data" assigned a value but never read File: C:/Users/ADMIN/Desktop/fpga_project/main.vhd Line: 53
-Info (12128): Elaborating entity "uart_tx" for hierarchy "uart_tx:uart_tx_map" File: C:/Users/ADMIN/Desktop/fpga_project/main.vhd Line: 86
-Warning (10036): Verilog HDL or VHDL warning at uart_tx.vhd(29): object "r_data" assigned a value but never read File: C:/Users/ADMIN/Desktop/fpga_project/uart_tx.vhd Line: 29
-Info (12128): Elaborating entity "uart_rx" for hierarchy "uart_rx:uart_rx_map" File: C:/Users/ADMIN/Desktop/fpga_project/main.vhd Line: 101
-Warning (10492): VHDL Process Statement warning at uart_rx.vhd(40): signal "in_rst" is read inside the Process Statement but isn't in the Process Statement's sensitivity list File: C:/Users/ADMIN/Desktop/fpga_project/uart_rx.vhd Line: 40
-Warning (13024): Output pins are stuck at VCC or GND
-    Warning (13410): Pin "out_tx" is stuck at VCC File: C:/Users/ADMIN/Desktop/fpga_project/main.vhd Line: 9
-Info (17049): 39 registers lost all their fanouts during netlist optimizations.
-Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
-    Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
-Warning (21074): Design contains 2 input pin(s) that do not drive logic
-    Warning (15610): No output dependent on input pin "in_clk" File: C:/Users/ADMIN/Desktop/fpga_project/main.vhd Line: 6
-    Warning (15610): No output dependent on input pin "in_rst" File: C:/Users/ADMIN/Desktop/fpga_project/main.vhd Line: 7
-Info (21057): Implemented 5 device resources after synthesis - the final resource count might be different
-    Info (21058): Implemented 3 input pins
-    Info (21059): Implemented 2 output pins
-Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 10 warnings
-    Info: Peak virtual memory: 4795 megabytes
-    Info: Processing ended: Tue Dec 24 00:39:02 2019
-    Info: Elapsed time: 00:00:16
-    Info: Total CPU time (on all processors): 00:00:33
+Warning (10036): Verilog HDL or VHDL warning at main.vhd(130): object "r_data" assigned a value but never read File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 130
+Warning (10036): Verilog HDL or VHDL warning at main.vhd(132): object "r_tx_data" assigned a value but never read File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 132
+Warning (10036): Verilog HDL or VHDL warning at main.vhd(140): object "w_FULL" assigned a value but never read File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 140
+Warning (10036): Verilog HDL or VHDL warning at main.vhd(143): object "w_EMPTY" assigned a value but never read File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 143
+Warning (10541): VHDL Signal Declaration warning at main.vhd(148): used implicit default value for signal "config" because signal was never assigned a value or an explicit default value. Use of implicit default value may introduce unintended design optimizations. File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 148
+Warning (10036): Verilog HDL or VHDL warning at main.vhd(157): object "temperature" assigned a value but never read File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 157
+Warning (10036): Verilog HDL or VHDL warning at main.vhd(159): object "i2c_ack_err" assigned a value but never read File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 159
+Warning (10036): Verilog HDL or VHDL warning at main.vhd(168): object "enable" assigned a value but never read File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 168
+Warning (10036): Verilog HDL or VHDL warning at main.vhd(169): object "output1" assigned a value but never read File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 169
+Warning (10036): Verilog HDL or VHDL warning at main.vhd(170): object "output2" assigned a value but never read File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 170
+Warning (10036): Verilog HDL or VHDL warning at main.vhd(171): object "enable2" assigned a value but never read File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 171
+Warning (10492): VHDL Process Statement warning at main.vhd(266): signal "in_clk" is read inside the Process Statement but isn't in the Process Statement's sensitivity list File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 266
+Error (10028): Can't resolve multiple constant drivers for net "r_data_cntrl.IDLE" at main.vhd(297) File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 297
+Error (10029): Constant driver at main.vhd(261) File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 261
+Error (10028): Can't resolve multiple constant drivers for net "r_data_cntrl.REC" at main.vhd(297) File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 297
+Error (10028): Can't resolve multiple constant drivers for net "r_data_cntrl.SEND" at main.vhd(297) File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 297
+Error (10028): Can't resolve multiple constant drivers for net "r_RD_EN" at main.vhd(301) File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 301
+Error (10029): Constant driver at main.vhd(263) File: C:/Users/ADMIN/Desktop/FPGAONTHECAR/main.vhd Line: 263
+Error (12153): Can't elaborate top-level user hierarchy
+Error: Quartus Prime Analysis & Synthesis was unsuccessful. 7 errors, 13 warnings
+    Error: Peak virtual memory: 4784 megabytes
+    Error: Processing ended: Mon Jan 13 01:56:59 2020
+    Error: Elapsed time: 00:00:13
+    Error: Total CPU time (on all processors): 00:00:27
 
 

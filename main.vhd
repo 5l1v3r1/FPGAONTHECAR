@@ -1,16 +1,19 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+USE ieee.numeric_std.ALL;
 
 entity main is 
+	generic(
+    clk_freq : integer := 12_000_000;
+    resolution : integer := 8; --desired resolution of temperature data in bits
+    temp_sensor_address: std_logic_vector (6 downto 0) := "1110110");
 	PORT(
 		in_clk: in std_logic;
 		in_rst: in std_logic;
 		in_rx : in std_logic;
 		out_tx : out std_logic;
 		sda: inout std_logic;
-		scl: inout std_logic;
-		led1 : out std_logic;
-		i2c_ack_err      : BUFFER std_logic 
+		scl: inout std_logic
 	);
 	end main;
 	
@@ -112,6 +115,11 @@ architecture Behavioral of main is
 	
 	-- General States
 	signal main_cntrl : vehicle := IDLE;
+	signal coordx : integer := 0;
+	signal coordy : integer := 0;
+	signal basex : integer := 0;
+	signal basey : integer := 0;
+	signal bs : std_logic := '0';
 	
 	-- Signal that should be connected to components
 	-- UART
@@ -120,46 +128,47 @@ architecture Behavioral of main is
 	signal r_tx_done : std_logic := '0';
 	signal r_rx_done : std_logic := '0';
 	signal r_data : std_logic_vector(7 downto 0);
-	signal r_rx_data : std_logic_vector(7 downto 0);
+	signal r_rx_data : std_logic_vector(7 downto 0) := "00000000";
 	signal r_tx_data : std_logic_vector(7 downto 0);
 	
 	--FIFO
 	constant c_DEPTH : integer := 32;
-    constant c_WIDTH : integer := 8;
+   constant c_WIDTH : integer := 8;
        
-    signal r_WR_EN   : std_logic := '0';
-    signal r_WR_DATA : std_logic_vector(c_WIDTH-1 downto 0);
-    signal w_FULL    : std_logic;
-    signal r_RD_EN   : std_logic := '0';
-    signal w_RD_DATA : std_logic_vector(c_WIDTH-1 downto 0);
-    signal w_EMPTY   : std_logic;
+   signal r_WR_EN   : std_logic := '0';
+   signal r_WR_DATA : std_logic_vector(c_WIDTH-1 downto 0);
+   signal w_FULL    : std_logic;
+   signal r_RD_EN   : std_logic := '0';
+   signal w_RD_DATA : std_logic_vector(c_WIDTH-1 downto 0);
+   signal w_EMPTY   : std_logic;
     
     -- I2C 
-    signal state : machine ; --state machine
-    signal config : std_logic_vector(7 downto 0); --value to set the bme280 configuration
-    signal i2c_ena : std_logic ;
-    signal i2c_address : std_logic_vector (6 downto 0);
-    signal i2c_rw : std_logic ;
-    signal i2c_data_wr : std_logic_vector (7 downto 0);
-    signal i2c_data_rd : std_logic_vector (7 downto 0);
-    signal i2c_busy : std_logic ;
-    signal busy_prev : std_logic ; --previous value of i2c busy signal
-    signal temp_data  :std_logic_vector (15 downto 0); --temperature data buffer 
-    signal temperature :  std_logic_vector(resolution-1 downto 0);
-    signal senddata : std_logic_vector(10 downto 0);                 
- 
+	type machine is (start, set_resolution, set_reg_pointer, read_data, output_result);
+   signal state : machine ; --state machine
+   signal config : std_logic_vector(7 downto 0); --value to set the bme280 configuration
+   signal i2c_ena : std_logic ;
+   signal i2c_address : std_logic_vector (6 downto 0);
+   signal i2c_rw : std_logic ;
+   signal i2c_data_wr : std_logic_vector (7 downto 0);
+   signal i2c_data_rd : std_logic_vector (7 downto 0);
+   signal i2c_busy : std_logic ;
+   signal busy_prev : std_logic ; --previous value of i2c busy signal
+   signal temp_data  :std_logic_vector (15 downto 0); --temperature data buffer 
+   signal temperature :  std_logic_vector(resolution-1 downto 0);
+   signal senddata : std_logic_vector(10 downto 0);                 
+	signal i2c_ack_err :  std_logic ;
     
     
     -- DC MOTOR
-    signal kontak : std_logic := '0';           
-    signal ileri  : std_logic := '0';                
-    signal geri  : std_logic := '0';                      
-    signal sag : std_logic := '0';        
-    signal sol : std_logic := '0';         
-    signal enable : std_logic := '0';       
-    signal output1 : std_logic := '0';           
-    signal output2 : std_logic := '0';                 
-    signal enable2 : std_logic := '0';       
+   signal kontak : std_logic := '0';           
+   signal ileri  : std_logic := '0';                
+   signal geri  : std_logic := '0';                      
+   signal sag : std_logic := '0';        
+   signal sol : std_logic := '0';         
+   signal enable : std_logic;       
+   signal output1 : std_logic ;           
+   signal output2 : std_logic ;                 
+   signal enable2 : std_logic;       
     
 	
 	-- Signals that should be connected to main design
@@ -170,7 +179,7 @@ architecture Behavioral of main is
 	
 	begin
 	
-	led1 <= in_rx;
+	
 	
 	
 	uart_tx_map :  uart_tx
@@ -200,6 +209,7 @@ architecture Behavioral of main is
             out_rx_data => r_rx_data,
             out_rx_done => r_rx_done
         );
+		  
      FIFO_MAP : fifo
             generic map (
               g_WIDTH => c_WIDTH,
@@ -215,23 +225,24 @@ architecture Behavioral of main is
               o_rd_data  => w_RD_DATA,
               o_empty    => w_EMPTY
               );
+				  
               
       i2c_master_0: i2c_master
-    generic map(
-    input_in_clk => in_clk_freq, 
-    bus_in_clk=> 400_000)
-    port map (
-    in_clk => in_clk,
-    in_rst => in_rst,
-    ena => i2c_ena ,
-    addr => i2c_address,
-    rw => i2c_rw,
-    data_wr => i2c_data_wr,
-    busy => i2c_busy ,
-    data_rd => i2c_data_rd,
-    ack_error => i2c_ack_err,
-    sda => sda,
-    scl => scl);
+			 generic map(
+			 input_in_clk => clk_freq, 
+			 bus_in_clk=> 400_000)
+			 port map (
+			 in_clk => in_clk,
+			 in_rst => in_rst,
+			 ena => i2c_ena ,
+			 addr => i2c_address,
+			 rw => i2c_rw,
+			 data_wr => i2c_data_wr,
+			 busy => i2c_busy ,
+			 data_rd => i2c_data_rd,
+			 ack_error => i2c_ack_err,
+			 sda => sda,
+			 scl => scl);
                        
          DC_MAP: dc_motor  
              port map ( 
@@ -247,7 +258,7 @@ architecture Behavioral of main is
                        enable2 => enable2 );
  
 	
-	mainproc: process(in_clk, in_rst)
+	uart: process(r_data_cntrl, in_rst)
 	begin
 		if in_rst = '1' then
 			r_data_cntrl <= IDLE;
@@ -259,32 +270,35 @@ architecture Behavioral of main is
 				when IDLE =>
 					r_data_cntrl <= REC;
 				when REC =>
-					if r_rx_done = '1' then
-						r_tx_data <= r_rx_data;
+					if (r_rx_done = '1') then
+						r_tx_data <= "00010100";
 
 						r_WR_DATA <= r_rx_data;
+						
 						r_tx_start <= '1';
 					else
-					   r_RD_EN <= '0';
-					   r_WR_EN <= '1';
-					   r_data_cntrl <= SEND;
+						if (r_WR_DATA /= r_rx_data) then 
+							r_RD_EN <= '0';
+							r_WR_EN <= '1';
+						end if;
+					   
 					end if;
 				when SEND => 
-				    r_WR_EN <= '0';
-					if r_tx_done = '1' then
+				   r_WR_EN <= '0';
+					if (r_tx_done = '1') then
 						r_data_cntrl <= IDLE;
 					end if;
-				when others => NULL;
+
 			end case;
 		end if;
 	end process;
 	
 	
-	process(in_clk, in_rst)
-	   
+	mainproc:process(in_clk, in_rst)
+	   variable counter : integer range clk_freq/10 downto 0 := 0;
         	   
         begin
-           if in_rst = '1' then
+           if (in_rst = '1') then
                     main_cntrl <= IDLE;
                    
            elsif rising_edge(in_clk) then
@@ -300,19 +314,70 @@ architecture Behavioral of main is
                         main_cntrl <= START;
                     end if;
                 when START =>
-                    r_RD_EN <= '0';
-                    
-                    
+                  r_RD_EN <= '0';
+						if (w_RD_DATA(1) = '0') then
+							main_cntrl <= GOING;
+							coordx <= to_integer(unsigned(w_RD_DATA(4 downto 2)));
+							coordy <= to_integer(unsigned(w_RD_DATA(7 downto 5)));
+							basex <= to_integer(unsigned(w_RD_DATA(4 downto 2)));
+							basey <= to_integer(unsigned(w_RD_DATA(7 downto 5))) - 3;
+						end if;
                 when GOING => 
-                    r_RD_EN <= '0';
-                    
+							r_RD_EN <= '0';
+							
+							if (coordx /= 0 )then 
+								if(counter < clk_freq) then 
+									counter := counter+1 ;
+									kontak <= '1';           
+									if (coordx > 3)then
+										sag <= '1';
+									else 
+										sol <= '1';
+									end if;
+								else 
+									kontak <= '0';
+									sag <= '0';
+									sol <= '0';
+									coordx <= coordx - 1;
+									counter := 0;
+								end if;
+							elsif (coordy /= 0) then
+								if(counter < clk_freq) then 
+									counter := counter+1 ;
+									kontak <= '1';
+									
+									if (coordy > 3) then
+										ileri <= '1';
+									else
+										geri <= '1'; 
+									end if;
+								else 
+									kontak <= '0';
+									ileri <= '0';
+									geri <= '0'; 
+									coordy <= coordy - 1;
+									counter := 0;
+								end if;
+							else 
+								if (bs = '0') then
+									main_cntrl <= ONLOC;
+								else
+									main_cntrl <= IDLE;
+								end if;
+								
+							end if;
                     
                     
                 when ONLOC =>
                     r_RD_EN <= '0';
-                    
-               
-                when others => NULL;
+						  r_tx_data(1) <= '1';
+                    r_data_cntrl <= SEND;
+						  main_cntrl <= GOING;
+						  coordx <= basex;
+						  coordy <= basey;
+						  bs <= '1';
+						  
+          
                end case;
            end if;
            
@@ -320,103 +385,103 @@ architecture Behavioral of main is
     end process;
 	
     i2cproc:process(in_clk,in_rst)
-  variable busy_cnt : integer range 2 downto 0 :=0 ;
-  variable counter : integer range in_clk_freq/10 downto 0 := 0;
-  begin
-    if(in_rst = '0') then 
-    --Clear all values 
-        counter := 0;
-        i2c_ena <= '0';
-        busy_cnt := 0;
-        temperature <= (others => '0'); --clear temp result
-        state <= start;
-    elsif (in_clk 'event and in_clk = '1') then 
-        case state is
-            when start =>
-             if(counter < in_clk_freq/10) then 
-                counter := counter+1 ;
-             else 
-                counter := 0;
-                state<=set_resolution;
-             end if;
-             
-             when set_resolution => 
-                busy_prev <= i2c_busy;
-                if (busy_prev = '0' and i2c_busy ='1') then
-                    busy_cnt := busy_cnt+1;
-                end if;
-                
-                case busy_cnt is
-                    when 0 => 
-                        i2c_ena <='1';
-                        i2c_address <= temp_sensor_address;
-                        i2c_rw <='0';
-                        i2c_data_wr <= "00000001";
-                    when 1 =>
-                        i2c_data_wr <= config ;
-                    when 2 => 
-                        i2c_ena <= '0';                              --deassert enable to stop transaction after command 2
-              IF(i2c_busy = '0') THEN                      --transaction complete
-                busy_cnt := 0;                               --reset busy_cnt for next transaction
-                state <= set_reg_pointer;                    --advance to setting the Register Pointer for data reads
-              END IF;
-            WHEN OTHERS => NULL;
-          END CASE;
-          
-        --set the register pointer to the Ambient Temperature Register  
-        WHEN set_reg_pointer =>
-          busy_prev <= i2c_busy;                       --capture the value of the previous i2c busy signal
-          IF(busy_prev = '0' AND i2c_busy = '1') THEN  --i2c busy just went high
-            busy_cnt := busy_cnt + 1;                    --counts the times busy has gone from low to high during transaction
-          END IF;
-          CASE busy_cnt IS                             --busy_cnt keeps track of which command we are on
-            WHEN 0 =>                                    --no command latched in yet
-              i2c_ena <= '1';                              --initiate the transaction
-              i2c_address <= temp_sensor_address;                --set the address of the temp sensor
-              i2c_rw <= '0';                               --command 1 is a write
-              i2c_data_wr <= "00000000";                   --set the Register Pointer to the Ambient Temperature Register
-            WHEN 1 =>                                    --1st busy high: command 1 latched
-              i2c_ena <= '0';                              --deassert enable to stop transaction after command 1
-              IF(i2c_busy = '0') THEN                      --transaction complete
-                busy_cnt := 0;                               --reset busy_cnt for next transaction
-                state <= read_data;                          --advance to reading the data
-              END IF;
-            WHEN OTHERS => NULL;
-          END CASE;
-        
-        --read ambient temperature data
-        WHEN read_data =>
-          busy_prev <= i2c_busy;                       --capture the value of the previous i2c busy signal
-          IF(busy_prev = '0' AND i2c_busy = '1') THEN  --i2c busy just went high
-            busy_cnt := busy_cnt + 1;                    --counts the times busy has gone from low to high during transaction
-          END IF;
-          CASE busy_cnt IS                             --busy_cnt keeps track of which command we are on
-            WHEN 0 =>                                    --no command latched in yet
-              i2c_ena <= '1';                              --initiate the transaction
-              i2c_address <= temp_sensor_address;                --set the address of the temp sensor
-              i2c_rw <= '1';                               --command 1 is a read
-            WHEN 1 =>                                    --1st busy high: command 1 latched, okay to issue command 2
-              IF(i2c_busy = '0') THEN                      --indicates data read in command 1 is ready
-                temp_data(15 DOWNTO 8) <= i2c_data_rd;       --retrieve MSB data from command 1
-              END IF;
-            WHEN 2 =>                                    --2nd busy high: command 2 latched
-              i2c_ena <= '0';                              --deassert enable to stop transaction after command 2
-              IF(i2c_busy = '0') THEN                      --indicates data read in command 2 is ready
-                temp_data(7 DOWNTO 0) <= i2c_data_rd;        --retrieve LSB data from command 2
-                busy_cnt := 0;                               --reset busy_cnt for next transaction
-                state <= output_result;                      --advance to output the result
-              END IF;
-           WHEN OTHERS => NULL;
-          END CASE;
+	  variable busy_cnt : integer range 2 downto 0 :=0 ;
+	  variable counter : integer range clk_freq/10 downto 0 := 0;
+	  begin
+		 if(in_rst = '0') then 
+		 --Clear all values 
+			  counter := 0;
+			  i2c_ena <= '0';
+			  busy_cnt := 0;
+			  temperature <= (others => '0'); --clear temp result
+			  state <= start;
+		 elsif (in_clk 'event and in_clk = '1') then 
+			  case state is
+					when start =>
+					 if(counter < clk_freq/10) then 
+						 counter := counter+1 ;
+					 else 
+						 counter := 0;
+						 state<=set_resolution;
+					 end if;
+					 
+					 when set_resolution => 
+						 busy_prev <= i2c_busy;
+						 if (busy_prev = '0' and i2c_busy ='1') then
+							  busy_cnt := busy_cnt+1;
+						 end if;
+						 
+						 case busy_cnt is
+							  when 0 => 
+									i2c_ena <='1';
+									i2c_address <= temp_sensor_address;
+									i2c_rw <='0';
+									i2c_data_wr <= "00000001";
+							  when 1 =>
+									i2c_data_wr <= config ;
+							  when 2 => 
+									i2c_ena <= '0';                              --deassert enable to stop transaction after command 2
+					  IF(i2c_busy = '0') THEN                      --transaction complete
+						 busy_cnt := 0;                               --reset busy_cnt for next transaction
+						 state <= set_reg_pointer;                    --advance to setting the Register Pointer for data reads
+					  END IF;
+					WHEN OTHERS => NULL;
+				 END CASE;
+				 
+			  --set the register pointer to the Ambient Temperature Register  
+			  WHEN set_reg_pointer =>
+				 busy_prev <= i2c_busy;                       --capture the value of the previous i2c busy signal
+				 IF(busy_prev = '0' AND i2c_busy = '1') THEN  --i2c busy just went high
+					busy_cnt := busy_cnt + 1;                    --counts the times busy has gone from low to high during transaction
+				 END IF;
+				 CASE busy_cnt IS                             --busy_cnt keeps track of which command we are on
+					WHEN 0 =>                                    --no command latched in yet
+					  i2c_ena <= '1';                              --initiate the transaction
+					  i2c_address <= temp_sensor_address;                --set the address of the temp sensor
+					  i2c_rw <= '0';                               --command 1 is a write
+					  i2c_data_wr <= "00000000";                   --set the Register Pointer to the Ambient Temperature Register
+					WHEN 1 =>                                    --1st busy high: command 1 latched
+					  i2c_ena <= '0';                              --deassert enable to stop transaction after command 1
+					  IF(i2c_busy = '0') THEN                      --transaction complete
+						 busy_cnt := 0;                               --reset busy_cnt for next transaction
+						 state <= read_data;                          --advance to reading the data
+					  END IF;
+					WHEN OTHERS => NULL;
+				 END CASE;
+			  
+			  --read ambient temperature data
+			  WHEN read_data =>
+				 busy_prev <= i2c_busy;                       --capture the value of the previous i2c busy signal
+				 IF(busy_prev = '0' AND i2c_busy = '1') THEN  --i2c busy just went high
+					busy_cnt := busy_cnt + 1;                    --counts the times busy has gone from low to high during transaction
+				 END IF;
+				 CASE busy_cnt IS                             --busy_cnt keeps track of which command we are on
+					WHEN 0 =>                                    --no command latched in yet
+					  i2c_ena <= '1';                              --initiate the transaction
+					  i2c_address <= temp_sensor_address;                --set the address of the temp sensor
+					  i2c_rw <= '1';                               --command 1 is a read
+					WHEN 1 =>                                    --1st busy high: command 1 latched, okay to issue command 2
+					  IF(i2c_busy = '0') THEN                      --indicates data read in command 1 is ready
+						 temp_data(15 DOWNTO 8) <= i2c_data_rd;       --retrieve MSB data from command 1
+					  END IF;
+					WHEN 2 =>                                    --2nd busy high: command 2 latched
+					  i2c_ena <= '0';                              --deassert enable to stop transaction after command 2
+					  IF(i2c_busy = '0') THEN                      --indicates data read in command 2 is ready
+						 temp_data(7 DOWNTO 0) <= i2c_data_rd;        --retrieve LSB data from command 2
+						 busy_cnt := 0;                               --reset busy_cnt for next transaction
+						 state <= output_result;                      --advance to output the result
+					  END IF;
+				  WHEN OTHERS => NULL;
+				 END CASE;
 
-        --output the temperature data
-        WHEN output_result =>
-          temperature <= temp_data(15 DOWNTO 16-resolution);  --write temperature data to output
-          state <= read_data;                                 --retrieve the next temperature data
+			  --output the temperature data
+			  WHEN output_result =>
+				 temperature <= temp_data(15 DOWNTO 16-resolution);  --write temperature data to output
+				 state <= read_data;                                 --retrieve the next temperature data
 
-        --default to start state
-        WHEN OTHERS =>
-          state <= start;
+			  --default to start state
+			  WHEN OTHERS =>
+				 state <= start;
 
       END CASE;
     END IF;

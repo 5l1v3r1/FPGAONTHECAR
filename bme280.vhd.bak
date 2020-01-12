@@ -3,8 +3,8 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 entity i2c_leds is
   generic(
-    clk_freq : integer := 12_000_000;
-    resolution : integer := 24; --desired resolution of temperature data in bits
+    clk_freq : integer := 50_000_000;
+    resolution : integer := 5; --desired resolution of temperature data in bits
     temp_sensor_address: std_logic_vector (6 downto 0) := "1110110"); --I2C address of the temp sensor pmod
  
   port (
